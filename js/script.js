@@ -16,19 +16,19 @@ function showNum(num) {
 }
 
 /** Add specified amount of money to player.
- * @param {CostType} type - Type of currency.
+ * @param {Currency} type - Type of currency.
  * @param {number} amount - Amount to add.
  */
 function addCurrency(type, amount) {
     switch (type) {
-        case CostType.money:
+        case Currency.money:
             player.money = Math.max(player.money + amount, 0);
             break;
-        case CostType.programs:
+        case Currency.programs:
             player.programs = Math.max(player.programs + amount, 0);
             break;
         default:
-            console.error("addCurrency: unrecognized type" + type);
+            console.error(`addCurrency: unrecognized type ${type}.`);
     }
 }
 
@@ -37,7 +37,7 @@ function addCurrency(type, amount) {
  */
 function moneyButtonClick(clickPower) {
     var amountEarned = player.moneyPerClick * clickPower;
-    addCurrency(CostType.money, amountEarned);
+    addCurrency(Currency.money, amountEarned);
 }
 
 /** Return true if can afford the building.
@@ -45,7 +45,19 @@ function moneyButtonClick(clickPower) {
  * @return {bool} Whether the player can afford the building or not.
  */
 function canAfford(building) {
-    return player.money >= building.cost;
+    var playerCurrency;
+    switch (building.costType) {
+        case Currency.money:
+            playerCurrency = player.money;
+            break;
+        case Currency.programs:
+            playerCurrency = player.programs;
+            break;
+        default:
+            console.error(`canAfford: unrecognized type ${building.costType}.`);
+    }
+
+    return playerCurrency >= building.cost;
 }
 
 /** Buy a building, if can afford.
@@ -81,7 +93,7 @@ function iterateResources() {
         }
 
         // Compute currency from first tier buildings
-        addCurrency(player.buildings[i].costType, player.buildings[i].payout());
+        addCurrency(player.buildings[i].revenueType, player.buildings[i].payout());
     }
 }
 

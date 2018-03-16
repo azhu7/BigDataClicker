@@ -20,8 +20,8 @@ function Player() {
 	 * Data Structures, C
 	 */
 	this.buildings = [
-		new Building(1.1, 1, CostType.money, 1), new Building(1.2, 2, CostType.programs, 1),
-		new Building(2.1, 11, CostType.money, 2), new Building(2.2, 22, CostType.programs, 2)
+		new Building(1.1, 1, Currency.money, 1, Currency.money), new Building(1.2, 2, Currency.money, 1, Currency.programs),
+		new Building(2.1, 11, Currency.money, 2, Currency.money), new Building(2.2, 22, Currency.money, 2, Currency.programs)
 	];
 	this.highestUnlockedTier = 2;
 	this.numBuildingTypes = 2;
