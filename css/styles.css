@@ -1,0 +1,112 @@
+html {
+	overflow-y: scroll;
+}
+
+body {
+	background-color: #FCFBD4;
+	height: 100%;
+}
+
+#header {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+#infoContainer {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	height: 70px;
+	margin-bottom: 10px;
+}
+
+#moneyButton {
+	display: inline-block;
+	height: 70px;
+	width: 200px;
+	background-color: #D4DAFC;
+	font-size: 16px;
+	margin-right: 10px;
+	vertical-align: top;
+}
+
+#moneyButtonText {
+	line-height: 70px;
+}
+
+#info {
+	display: inline-block;
+	text-align: left;
+	white-space: nowrap;
+	margin-bottom: -8px;
+}
+
+#inventoryTable, #row5, #row6, #row7{
+	margin-left: auto;
+	margin-right: auto;
+	width: 90%;
+}
+
+#version {
+	clear: both;
+	font-size: 12px;
+	text-align: center;
+}
+
+.button h3 {
+	text-align: center;
+	margin: 0px;
+}
+
+.buttonLit h3 {
+	text-align: center;
+	margin: 0px;
+}
+
+.button p:nth-child(2) {
+	text-align: center;
+	margin: 0px;
+	font-size: 13px;
+}
+
+.buttonLit p:nth-child(2) {
+	text-align: center;
+	margin: 0px;
+	font-size: 13px;
+}
+
+.button p:last-child {
+	text-align: center;
+	margin: 0px;
+}
+
+.buttonLit p:last-child {
+	text-align: center;
+	margin: 0px;
+}
+
+.button, .buttonLit {
+	border: 1px solid black;
+	border-radius: 5px;
+	cursor: pointer;
+	width: 18%;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+
+.button {
+	background-color: #AAAAAA;
+}
+
+.buttonLit {
+	background-color: #D4DAFC;
+}
+
+.buttonLit:hover {
+	background-color: #ADBAFF;
+}
+
+.spacer {
+	width: 1%;
+}

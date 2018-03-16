@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" href="css/styles.css">
+
+		<meta charset="utf-8">
+
+		<title>Big Data Clicker</title>
+		<meta name="description" content="Big Data Clicker">
+		<meta name="author" content="Alexander Zhu">
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="test1">Instructions</div>
+			<div id="test2">Github</div>
+			<h1 id="header">Big Data Clicker</h1>
+			<div id="infoContainer">
+				<div class="button" id="moneyButton"><h3 id="moneyButtonText">Click for Money</h3></div>
+				<div id="info"></div>
+			</div>
+			<div id="inventory">
+				<div id="tableContainer">
+					<div id="initialRows"></div>
+				</div>
+			</div>
+		</div>
+		<p id="version">Version <span id="versionNum"></span></p>
+
+		<script type="text/template" id="dataTableTemplate">
+		  	<div id="dataTable">
+		  		<table>
+					<tr>
+						<td>Money:</td>
+		  				<td>$<%= money %></td>
+		  				<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td>Data:</td>
+						<td>$<%= data %></td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td>Programs:</td>
+						<td><%= programs %></td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td colspan=5>Money per manual click: $<%= moneyPerClick %></td>
+					</tr>
+					<tr>
+						<td>Money/cycle:</td>
+						<td>$<%= moneyPerSecond %></td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td>Data/cycle:</td>
+						<td>$<%= dataPerSecond %></td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td>Programs/cycle:</td>
+						<td><%= programsPerSecond %></td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td colspan=5>Money per autoclick: $<%= moneyPerAutoclick %></td>
+					</tr>
+					<tr>
+						<td>Net money/cycle:</td>
+						<td>$<%= netMoneyPerSecond %></td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td>Net data/cycle:</td>
+						<td>$<%= netDataPerSecond %></td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td>Cost/program:</td>
+						<td>$5.00</td>
+						<td class="spacer"></td>
+						<td class="spacer"></td>
+						<td colspan="5">Clock cycle time: <%= clockCycleInMilliseconds %> ms</td>
+					</tr>
+				</table>
+			</div>
+		</script>
+
+		<script type="text/template" id="inventoryTableTemplate">
+			<table id="inventoryTable">
+				<tr id="row1">
+					<td id="class1" class="button" onmousedown="buyBuilding(0)">
+						<h3>Intro to CS</h3>
+						<p>$<%= class1Power %>/cycle: costs $<%= class1Cost %>.</p>
+						<p>Owned: <%= class1Owned %> (<%= class1Manual %>)</p>
+					</td>
+					<td class="spacer"></td>
+					<td id="lang1" class="button" onmousedown="buyBuilding(1)">
+						<h3>Assembly</h3>
+						<p><%= lang1Power %> programs/cycle: costs $<%= lang1Cost %>.</p>
+						<p>Owned: <%= lang1Owned %> (<%= lang1Manual %>)</p>
+					</td>
+				</tr>
+				<tr id="row2">
+					<td id="class2" class="button" onmousedown="buyBuilding(2)">
+						<h3>Data Structures</h3>
+						<p><%= class2Power %> Intro to CS/cycle: costs $<%= class2Cost %>.</p>
+						<p>Owned: <%= class2Owned %> (<%= class2Manual %>)</p>
+					</td>
+					<td class="spacer"></td>
+					<td id="lang2" class="button" onmousedown="buyBuilding(3)">
+						<h3>C</h3>
+						<p><%= lang2Power %> Assembly/cycle: costs $<%= lang2Cost %>.</p>
+						<p>Owned: <%= lang2Owned %> (<%= lang2Manual %>)</p>
+					</td>
+				</tr>
+			</table>
+		</script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+		<script src="js/building.js"></script>
+		<script src="js/util.js"></script>
+		<script src="js/constants.js"></script>
+		<script src="js/data.js"></script>
+		<script src="js/script.js"></script>
+		<script src="js/storage.js"></script>
+	</body>
+</html>
