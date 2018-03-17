@@ -1,6 +1,6 @@
 # Big Data Clicker
 ## Description
-CS-themed clicker game.  
+Computer Science themed clicker game.  
 [Game Link](https://azhu7.github.io/BigDataClicker/)
 
 ## Reporting Issues

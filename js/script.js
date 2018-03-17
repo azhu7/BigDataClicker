@@ -9,10 +9,12 @@ function init() {
 
 /** Format number for displaying.
  * @param  {number} num - Number to display.
+ * @param  {string} prefix - Prefix of number.
+ * @param  {string} suffix - Suffix of number.
  * @return {string} Formatted number.
  */
-function showNum(num) {
-    return num.toFixed(2);
+function showNum(num, {prefix= "", suffix= ""} = {}) {
+    return `${prefix}${num.toFixed(2)} ${suffix}`;
 }
 
 /** Add specified amount of money to player.
@@ -125,18 +127,46 @@ function refreshData() {
 
 /** Refresh html inventory. */
 function refreshInventory() {
-    var inventoryTemplate = _.template($("#inventoryTableTemplate").html());
-    var initialRows = inventoryTemplate({
-        class1Power: showNum(player.buildings[0].revenue), class1Cost: showNum(player.buildings[0].cost), class1Owned: showNum(player.buildings[0].owned), class1Manual: showNum(player.buildings[0].manual),
-        lang1Power: showNum(player.buildings[1].revenue), lang1Cost: showNum(player.buildings[1].cost), lang1Owned: showNum(player.buildings[1].owned), lang1Manual: showNum(player.buildings[1].manual),
-        class2Power: showNum(player.buildings[2].revenue), class2Cost: showNum(player.buildings[2].cost), class2Owned: showNum(player.buildings[2].owned), class2Manual: showNum(player.buildings[2].manual),
-        lang2Power: showNum(player.buildings[3].revenue), lang2Cost: showNum(player.buildings[3].cost), lang2Owned: showNum(player.buildings[3].owned), lang2Manual: showNum(player.buildings[3].manual),
+    var buildingInfoTemplate = _.template($("#buildingInfoTemplate").html());
+
+    var building0 = buildingInfoTemplate({
+        name: "Intro to CS",
+        revenue: showNum(player.buildings[0].revenue, {prefix: "$"}),
+        cost: showNum(player.buildings[0].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[0].owned),
+        manual: showNum(player.buildings[0].manual)
     });
 
-    $("#initialRows").html(initialRows);
+    var building1 = buildingInfoTemplate({
+        name: "Assembly",
+        revenue: showNum(player.buildings[1].revenue, {suffix: "programs"}),
+        cost: showNum(player.buildings[1].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[1].owned),
+        manual: showNum(player.buildings[1].manual)
+    });
 
-    var rawList = $("#tableContainer div table tr .button");
-    var buttonList = jQuery.makeArray($("#tableContainer div table tr .button"));
+    var building2 = buildingInfoTemplate({
+        name: "Data Structures",
+        revenue: showNum(player.buildings[2].revenue, {suffix: "Intro to CS"}),
+        cost: showNum(player.buildings[2].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[2].owned),
+        manual: showNum(player.buildings[2].manual)
+    });
+
+    var building3 = buildingInfoTemplate({
+        name: "C",
+        revenue: showNum(player.buildings[3].revenue, {suffix: "Assembly"}),
+        cost: showNum(player.buildings[3].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[3].owned),
+        manual: showNum(player.buildings[3].manual)
+    });
+
+    $("#class1").html(building0);
+    $("#lang1").html(building1);
+    $("#class2").html(building2);
+    $("#lang2").html(building3);
+
+    var buttonList = jQuery.makeArray($("#tableContainer table tr .button,.buttonLit"));
     for (var i = 0; i < buttonList.length; i++) {
         buttonList[i].className = canAfford(player.buildings[i]) ? "buttonLit" : "button";
     }
