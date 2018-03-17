@@ -1,3 +1,9 @@
+/**
+ * Author: Alexander Zhu
+ * Date Created: March 15, 2018
+ * Description: Storage functions for Big Data Clicker.
+ */
+
 /** Save player state to local storage. */
 function save() {
 	localStorage.setItem(strings.savedPlayer, JSON.stringify(player));

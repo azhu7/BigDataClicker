@@ -1,3 +1,9 @@
+/**
+ * Author: Alexander Zhu
+ * Date Created: March 14, 2018
+ * Description: Main game logic for Big Data Clicker.
+ */
+
 var player = {};
 
 /* -- Helper functions -- */
@@ -82,20 +88,43 @@ function buyBuilding(index, amount = 1) {
 
 /** Iterate all game values. */
 function iterateAll() {
-    iterateResources();
+    computeBuildings();
+    computePlayerNetRevenue();
+    applyPlayerNetRevenue();
 }
 
-/** Iterate all resources (money, buildings, etc). */
-function iterateResources() {
+/** Compute player net revenues. */
+function computePlayerNetRevenue() {
+    player.moneyPerCycle = player.buildings[0].payout();
+    player.programsPerCycle = player.buildings[1].payout();
+    player.netMoneyPerCycle = player.moneyPerCycle - player.programsPerCycle*player.costPerProgram;
+}
+
+/** Apply player net revenues. */
+function applyPlayerNetRevenue() {
+    var canAffordPrograms = (player.money + player.netMoneyPerCycle) >= 0;
+    if (canAffordPrograms) {
+        // Can afford, buy all programs
+        addCurrency(Currency.money, player.netMoneyPerCycle);
+        addCurrency(Currency.programs, player.programsPerCycle);
+    }
+    else {
+        // Can't afford, buy as many programs as possible
+        var playerMoney = player.money + player.moneyPerCycle;
+        var maxAffordablePrograms = Math.floor(playerMoney / player.costPerProgram);
+        addCurrency(Currency.money, player.moneyPerCycle - maxAffordablePrograms * player.costPerProgram);
+        addCurrency(Currency.programs, maxAffordablePrograms);
+    }
+}
+
+/** Compute new number of buildings. */
+function computeBuildings() {
     var rowLen = player.numBuildingTypes;
     for (var i = 0; i < rowLen; i++) {
         // Generate lower tier buildings from higher tiers
         for (var j = player.highestUnlockedTier - 1; j > 0; j--) {
             player.buildings[i + (j-1)*rowLen].owned += player.buildings[i + j*rowLen].payout();
         }
-
-        // Compute currency from first tier buildings
-        addCurrency(player.buildings[i].revenueType, player.buildings[i].payout());
     }
 }
 
@@ -110,15 +139,16 @@ function refreshData() {
     var dataTableTemplate = _.template($("#dataTableTemplate").html());
 	var newDataTable = dataTableTemplate({
 		money: showNum(player.money),
-		moneyPerSecond: showNum(player.moneyPerSecond),
-		netMoneyPerSecond: showNum(player.netMoneyPerSecond),
+		moneyPerCycle: showNum(player.moneyPerCycle),
+		netMoneyPerCycle: showNum(player.netMoneyPerCycle),
 		moneyPerClick: showNum(player.moneyPerClick),
 		moneyPerAutoclick: showNum(player.moneyPerAutoclick),
 		data: showNum(player.data),
-		dataPerSecond: showNum(player.dataPerSecond),
-		netDataPerSecond: showNum(player.netDataPerSecond),
+		dataPerCycle: showNum(player.dataPerCycle),
+		netDataPerCycle: showNum(player.netDataPerCycle),
 		programs: showNum(player.programs),
-		programsPerSecond: showNum(player.programsPerSecond),
+		programsPerCycle: showNum(player.programsPerCycle),
+        costPerProgram: showNum(player.costPerProgram),
 		clockCycleInMilliseconds: showNum(player.clockCycleInMilliseconds),
 	});
 
@@ -166,7 +196,7 @@ function refreshInventory() {
     $("#class2").html(building2);
     $("#lang2").html(building3);
 
-    var buttonList = jQuery.makeArray($("#tableContainer table tr .button,.buttonLit"));
+    var buttonList = jQuery.makeArray($("#tableContainer table tr .button, .buttonLit"));
     for (var i = 0; i < buttonList.length; i++) {
         buttonList[i].className = canAfford(player.buildings[i]) ? "buttonLit" : "button";
     }
@@ -212,7 +242,9 @@ $(function() {
     // Initialize player
     if (localStorage.getItem(strings.savedPlayer)) {
         console.log("Found saved file. Loading.");
-        init();//load();
+        //load();
+        console.warn("Loading is turned off for development purposes.");
+        init();
     }
     else {
         init();

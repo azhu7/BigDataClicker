@@ -1,16 +1,25 @@
-/** Game values for the Player. */
+/**
+ * Author: Alexander Zhu
+ * Date Created: March 14, 2018
+ * Description: Data for Big Data Clicker.
+ */
+
+/** Enum for currency types */
+var Currency = Object.freeze({money:1, programs:2});
+
+/** Game values for a default Player. */
 function Player() {
 	this.money = 1;
-	this.moneyPerSecond = 0;
-	this.netMoneyPerSecond = 0;
+	this.moneyPerCycle = 0;
+	this.netMoneyPerCycle = 0;
 	this.moneyPerClick = 1;
 	this.moneyPerAutoclick = 0;
 	this.clickPower = 1;
 	this.data = 0;
-	this.dataPerSecond = 0;
-	this.netDataPerSecond = 0;
+	this.dataPerCycle = 0;
+	this.netDataPerCycle = 0;
 	this.programs = 0;
-	this.programsPerSecond = 0;
+	this.programsPerCycle = 0;
 	this.costPerProgram = 5;
 	this.clockCycleInMilliseconds = 3000;
 	this.updateIntervalInMilliseconds = 1000;  // Player can increase this to reduce CPU usage
@@ -31,5 +40,5 @@ function Player() {
 var strings = {
     savedPlayer: "playerSave",
     saveIntervalInMilliseconds: 10000,  // Automatically save every 10 seconds
-    version: "0.0.1"
+    version: "0.0.2"
 };

@@ -2,12 +2,12 @@
 <html lang="en">
 	<head>
 		<link rel="stylesheet" href="css/styles.css">
-
+		
 		<meta charset="utf-8">
-
-		<title>Big Data Clicker</title>
 		<meta name="description" content="Big Data Clicker">
 		<meta name="author" content="Alexander Zhu">
+
+		<title>Big Data Clicker</title>
 	</head>
 
 	<body>
@@ -21,7 +21,9 @@
 			<h1 id="header">Big Data Clicker</h1>
 			<div id="infoContainer">
 				<div class="button" id="moneyButton"><h3 id="moneyButtonText">Click for Money</h3></div>
-				<div id="info"></div>
+				<div id="info">
+					<!-- Will fill this with a dataTableTemplate -->
+				</div>
 			</div>
 			<div id="inventory">
 				<div id="tableContainer">
@@ -32,7 +34,7 @@
 							<td id="lang1" class="button" onmousedown="buyBuilding(1)"></td>
 						</tr>
 						<tr id="row2">
-							<td id="class2" class="button" onmousedown="buyBuilding(2)"></td>
+							<td id="class2" class="button" onmousedown="buyBuilding(2)"></td>`
 							<td class="spacer"></td>
 							<td id="lang2" class="button" onmousedown="buyBuilding(3)"></td>
 						</tr>
@@ -68,30 +70,30 @@
 					</tr>
 					<tr>
 						<td>Money/cycle:</td>
-						<td>$<%= moneyPerSecond %></td>
+						<td>$<%= moneyPerCycle %></td>
 						<td class="spacer"></td>
 						<td class="spacer"></td>
 						<td>Data/cycle:</td>
-						<td>$<%= dataPerSecond %></td>
+						<td>$<%= dataPerCycle %></td>
 						<td class="spacer"></td>
 						<td class="spacer"></td>
 						<td>Programs/cycle:</td>
-						<td><%= programsPerSecond %></td>
+						<td><%= programsPerCycle %></td>
 						<td class="spacer"></td>
 						<td class="spacer"></td>
 						<td colspan=5>Money per autoclick: $<%= moneyPerAutoclick %></td>
 					</tr>
 					<tr>
 						<td>Net money/cycle:</td>
-						<td>$<%= netMoneyPerSecond %></td>
+						<td>$<%= netMoneyPerCycle %></td>
 						<td class="spacer"></td>
 						<td class="spacer"></td>
 						<td>Net data/cycle:</td>
-						<td>$<%= netDataPerSecond %></td>
+						<td>$<%= netDataPerCycle %></td>
 						<td class="spacer"></td>
 						<td class="spacer"></td>
 						<td>Cost/program:</td>
-						<td>$5.00</td>
+						<td>$<%= costPerProgram %></td>
 						<td class="spacer"></td>
 						<td class="spacer"></td>
 						<td colspan="5">Clock cycle time: <%= clockCycleInMilliseconds %> ms</td>

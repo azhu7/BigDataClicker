@@ -1,5 +1,8 @@
-/** Enum for currency types */
-var Currency = Object.freeze({money:1, programs:2});
+/**
+ * Author: Alexander Zhu
+ * Date Created: March 14, 2018
+ * Description: Building class for Big Data Clicker.
+ */
 
 /** Building constructor.
  * @param {Number} costFactor - Rate at which cost increases.
