@@ -5,12 +5,25 @@
  */
 
 var player = {};
+var debug = new Debug();
 
 /* -- Helper functions -- */
 
-/** Default initialize player. */
+/** Initialize player. */
 function init() {
-    player = new Player();
+    if (debug.loadSaved) {
+        if (localStorage.getItem(strings.savedPlayer)) {
+            console.log("Found saved file. Loading.");
+            load();
+        }
+        else {
+            player = new Player();
+        }
+    }
+    else {
+        console.warn("Loading is turned off for development purposes.");
+        player = new Player();
+    }
 }
 
 /** Format number for displaying.
@@ -19,8 +32,9 @@ function init() {
  * @param  {string} suffix - Suffix of number.
  * @return {string} Formatted number.
  */
-function showNum(num, {prefix= "", suffix= ""} = {}) {
-    return `${prefix}${num.toFixed(2)} ${suffix}`;
+function showNum(num, {prefix = "", suffix = ""} = {}) {
+    var suffixDelimiter = suffix == "" ? "" : " ";  // Add a space if needed
+    return `${prefix}${num.toFixed(2)}${suffixDelimiter}${suffix}`;
 }
 
 /** Add specified amount of money to player.
@@ -34,6 +48,13 @@ function addCurrency(type, amount) {
             break;
         case Currency.programs:
             player.programs = Math.max(player.programs + amount, 0);
+            break;
+        case Currency.data:
+            player.data = Math.max(player.data + amount, 0);
+            break;
+        case Currency.rate:
+            // More rate = Lower clock cycle time
+            player.clockCycleInMilliseconds = Math.max(player.clockCycleInMilliseconds - amount, 0);
             break;
         default:
             console.error(`addCurrency: unrecognized type ${type}.`);
@@ -60,6 +81,9 @@ function canAfford(building) {
             break;
         case Currency.programs:
             playerCurrency = player.programs;
+            break;
+        case Currency.data:
+            playerCurrency = player.data;
             break;
         default:
             console.error(`canAfford: unrecognized type ${building.costType}.`);
@@ -98,6 +122,9 @@ function computePlayerNetRevenue() {
     player.moneyPerCycle = player.buildings[0].payout();
     player.programsPerCycle = player.buildings[1].payout();
     player.netMoneyPerCycle = player.moneyPerCycle - player.programsPerCycle*player.costPerProgram;
+
+    player.netDataPerCycle = player.dataPerCycle = player.buildings[2].payout();
+    player.ratePerCycle = player.buildings[3].payout();
 }
 
 /** Apply player net revenues. */
@@ -115,6 +142,12 @@ function applyPlayerNetRevenue() {
         addCurrency(Currency.money, player.moneyPerCycle - maxAffordablePrograms * player.costPerProgram);
         addCurrency(Currency.programs, maxAffordablePrograms);
     }
+
+    // Add data
+    addCurrency(Currency.data, player.netDataPerCycle);
+
+    // Add rate
+    addCurrency(Currency.rate, player.ratePerCycle);
 }
 
 /** Compute new number of buildings. */
@@ -158,6 +191,7 @@ function refreshData() {
 /** Refresh html inventory. */
 function refreshInventory() {
     var buildingInfoTemplate = _.template($("#buildingInfoTemplate").html());
+    var rateBuildingInfoTemplate = _.template($("#rateBuildingInfoTemplate").html());
 
     var building0 = buildingInfoTemplate({
         name: "Intro to CS",
@@ -176,25 +210,60 @@ function refreshInventory() {
     });
 
     var building2 = buildingInfoTemplate({
-        name: "Data Structures",
-        revenue: showNum(player.buildings[2].revenue, {suffix: "Intro to CS"}),
-        cost: showNum(player.buildings[2].cost, {prefix: "$"}),
+        name: "Turing Machine",
+        revenue: showNum(player.buildings[2].revenue, {suffix: "data"}),
+        cost: showNum(player.buildings[2].cost, {suffix: "programs"}),
         owned: showNum(player.buildings[2].owned),
         manual: showNum(player.buildings[2].manual)
     });
 
-    var building3 = buildingInfoTemplate({
-        name: "C",
-        revenue: showNum(player.buildings[3].revenue, {suffix: "Assembly"}),
+    var building3 = rateBuildingInfoTemplate({
+        name: "Software Engineer",
         cost: showNum(player.buildings[3].cost, {prefix: "$"}),
         owned: showNum(player.buildings[3].owned),
         manual: showNum(player.buildings[3].manual)
     });
 
+    var building4 = buildingInfoTemplate({
+        name: "Data Structures",
+        revenue: showNum(player.buildings[4].revenue, {suffix: "Intro to CS"}),
+        cost: showNum(player.buildings[4].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[4].owned),
+        manual: showNum(player.buildings[4].manual)
+    });
+
+    var building5 = buildingInfoTemplate({
+        name: "C",
+        revenue: showNum(player.buildings[5].revenue, {suffix: "Assembly"}),
+        cost: showNum(player.buildings[5].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[5].owned),
+        manual: showNum(player.buildings[5].manual)
+    });
+
+    var building6 = buildingInfoTemplate({
+        name: "Computer",
+        revenue: showNum(player.buildings[6].revenue, {suffix: "data"}),
+        cost: showNum(player.buildings[6].cost, {suffix: "Turing Machine"}),
+        owned: showNum(player.buildings[6].owned),
+        manual: showNum(player.buildings[6].manual)
+    });
+
+    var building7 = buildingInfoTemplate({
+        name: "Edsger Dijkstra",
+        revenue: showNum(player.buildings[7].revenue, {suffix: "Software Engineer"}),
+        cost: showNum(player.buildings[7].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[7].owned),
+        manual: showNum(player.buildings[7].manual)
+    });
+
     $("#class1").html(building0);
     $("#lang1").html(building1);
-    $("#class2").html(building2);
-    $("#lang2").html(building3);
+    $("#hardware1").html(building2);
+    $("#people1").html(building3);
+    $("#class2").html(building4);
+    $("#lang2").html(building5);
+    $("#hardware2").html(building6);
+    $("#people2").html(building7);
 
     var buttonList = jQuery.makeArray($("#tableContainer table tr .button, .buttonLit"));
     for (var i = 0; i < buttonList.length; i++) {
@@ -239,16 +308,9 @@ var refresh = function() {
 /** Runs on startup. */
 $(function() {
     console.log("Running start up code.");
+
     // Initialize player
-    if (localStorage.getItem(strings.savedPlayer)) {
-        console.log("Found saved file. Loading.");
-        //load();
-        console.warn("Loading is turned off for development purposes.");
-        init();
-    }
-    else {
-        init();
-    }
+    init();
 
     $("#versionNum").html(strings.version);
     $("#moneyButton").click(function(event) {
@@ -257,7 +319,13 @@ $(function() {
 
     iterate();
     refresh();
-    setInterval(save, strings.saveIntervalInMilliseconds);
+
+    if (debug.autosave) {
+        setInterval(save, strings.saveIntervalInMilliseconds);
+    }
+    else {
+        console.warn("Autosave is turned off for development purposes.");
+    }
 
     console.log("Finished start up code.");
 });

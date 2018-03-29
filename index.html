@@ -2,7 +2,6 @@
 <html lang="en">
 	<head>
 		<link rel="stylesheet" href="css/styles.css">
-		
 		<meta charset="utf-8">
 		<meta name="description" content="Big Data Clicker">
 		<meta name="author" content="Alexander Zhu">
@@ -14,9 +13,7 @@
 		<div id="container">
 			<div id="test1">Instructions</div>
 			<div id="test2">
-				<a href="https://github.com/azhu7/BigDataClicker">
-					Github
-				</a>
+				<a href="https://github.com/azhu7/BigDataClicker">Github</a>
 			</div>
 			<h1 id="header">Big Data Clicker</h1>
 			<div id="infoContainer">
@@ -32,11 +29,19 @@
 							<td id="class1" class="button" onmousedown="buyBuilding(0)"></td>
 							<td class="spacer"></td>
 							<td id="lang1" class="button" onmousedown="buyBuilding(1)"></td>
+							<td class="spacer"></td>
+							<td id="hardware1" class="button" onmousedown="buyBuilding(2)"></td>
+							<td class="spacer"></td>
+							<td id="people1" class="button" onmousedown="buyBuilding(3)"></td>
 						</tr>
 						<tr id="row2">
-							<td id="class2" class="button" onmousedown="buyBuilding(2)"></td>`
+							<td id="class2" class="button" onmousedown="buyBuilding(4)"></td>
 							<td class="spacer"></td>
-							<td id="lang2" class="button" onmousedown="buyBuilding(3)"></td>
+							<td id="lang2" class="button" onmousedown="buyBuilding(5)"></td>
+							<td class="spacer"></td>
+							<td id="hardware2" class="button" onmousedown="buyBuilding(6)"></td>
+							<td class="spacer"></td>
+							<td id="people2" class="button" onmousedown="buyBuilding(7)"></td>
 						</tr>
 					</table>
 				</div>
@@ -47,6 +52,12 @@
 		<script type="text/template" id="buildingInfoTemplate">
 			<h3><%= name %></h3>
 			<p><%= revenue %>/cycle: costs <%= cost %>.</p>
+			<p>Owned: <%= owned %> (<%= manual %>)</p>
+		</script>
+
+		<script type="text/template" id="rateBuildingInfoTemplate">
+			<h3><%= name %></h3>
+			<p>Decrease clock cycle time: costs <%= cost %>.</p>
 			<p>Owned: <%= owned %> (<%= manual %>)</p>
 		</script>
 
