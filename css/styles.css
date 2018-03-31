@@ -4,7 +4,6 @@
  * Description: Main stylesheet for Big Data Clicker.
  */
 
-
 html {
 	overflow-y: scroll;
 }
@@ -99,7 +98,7 @@ body {
 	border: 1px solid black;
 	border-radius: 5px;
 	cursor: pointer;
-	width: 18%;
+	width: 15%;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 }

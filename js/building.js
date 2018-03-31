@@ -13,7 +13,8 @@
  * @param {Number} owned - Total owned (manual + generated)
  * @param {Number} manual - // Number manually bought
  */
-function Building(costFactor, cost, costType, revenue, revenueType, owned = 0, manual = 0) {
+function Building(name, costFactor, cost, costType, revenue, revenueType, owned = 0, manual = 0) {
+	this.name = name;
 	this.costFactor = costFactor;
 	this.cost = cost;
 	this.costType = costType;

@@ -119,12 +119,19 @@ function iterateAll() {
 
 /** Compute player net revenues. */
 function computePlayerNetRevenue() {
-    player.moneyPerCycle = player.buildings[0].payout();
+    // Money + Programs per cycle
+    player.moneyPerCycle = player.buildings[0].payout() + player.buildings[3].payout();
     player.programsPerCycle = player.buildings[1].payout();
     player.netMoneyPerCycle = player.moneyPerCycle - player.programsPerCycle*player.costPerProgram;
 
+    // Data per cycle
     player.netDataPerCycle = player.dataPerCycle = player.buildings[2].payout();
-    player.ratePerCycle = player.buildings[3].payout();
+
+    // Money per click
+    player.moneyPerClick = player.clickPower * (player.baseMoneyPerClick + player.buildings[4].payout());
+
+    // Clock rate
+    player.ratePerCycle = player.buildings[5].payout();
 }
 
 /** Apply player net revenues. */
@@ -191,10 +198,11 @@ function refreshData() {
 /** Refresh html inventory. */
 function refreshInventory() {
     var buildingInfoTemplate = _.template($("#buildingInfoTemplate").html());
+    var clickBuildingInfoTemplate = _.template($("#clickBuildingInfoTemplate").html());
     var rateBuildingInfoTemplate = _.template($("#rateBuildingInfoTemplate").html());
 
     var building0 = buildingInfoTemplate({
-        name: "Intro to CS",
+        name: player.buildings[0].name,
         revenue: showNum(player.buildings[0].revenue, {prefix: "$"}),
         cost: showNum(player.buildings[0].cost, {prefix: "$"}),
         owned: showNum(player.buildings[0].owned),
@@ -202,7 +210,7 @@ function refreshInventory() {
     });
 
     var building1 = buildingInfoTemplate({
-        name: "Assembly",
+        name: player.buildings[1].name,
         revenue: showNum(player.buildings[1].revenue, {suffix: "programs"}),
         cost: showNum(player.buildings[1].cost, {prefix: "$"}),
         owned: showNum(player.buildings[1].owned),
@@ -210,60 +218,96 @@ function refreshInventory() {
     });
 
     var building2 = buildingInfoTemplate({
-        name: "Turing Machine",
+        name: player.buildings[2].name,
         revenue: showNum(player.buildings[2].revenue, {suffix: "data"}),
         cost: showNum(player.buildings[2].cost, {suffix: "programs"}),
         owned: showNum(player.buildings[2].owned),
         manual: showNum(player.buildings[2].manual)
     });
 
-    var building3 = rateBuildingInfoTemplate({
-        name: "Software Engineer",
-        cost: showNum(player.buildings[3].cost, {prefix: "$"}),
+    var building3 = buildingInfoTemplate({
+        name: player.buildings[3].name,
+        revenue: showNum(player.buildings[3].revenue, {prefix: "$"}),
+        cost: showNum(player.buildings[3].cost, {suffix: "data"}),
         owned: showNum(player.buildings[3].owned),
         manual: showNum(player.buildings[3].manual)
     });
 
-    var building4 = buildingInfoTemplate({
-        name: "Data Structures",
-        revenue: showNum(player.buildings[4].revenue, {suffix: "Intro to CS"}),
+    var building4 = clickBuildingInfoTemplate({
+        name: player.buildings[4].name,
+        revenue: showNum(player.buildings[4].revenue, {prefix: "$"}),
         cost: showNum(player.buildings[4].cost, {prefix: "$"}),
         owned: showNum(player.buildings[4].owned),
         manual: showNum(player.buildings[4].manual)
     });
 
-    var building5 = buildingInfoTemplate({
-        name: "C",
-        revenue: showNum(player.buildings[5].revenue, {suffix: "Assembly"}),
+    var building5 = rateBuildingInfoTemplate({
+        name: player.buildings[5].name,
         cost: showNum(player.buildings[5].cost, {prefix: "$"}),
         owned: showNum(player.buildings[5].owned),
         manual: showNum(player.buildings[5].manual)
     });
 
     var building6 = buildingInfoTemplate({
-        name: "Computer",
-        revenue: showNum(player.buildings[6].revenue, {suffix: "data"}),
-        cost: showNum(player.buildings[6].cost, {suffix: "Turing Machine"}),
+        name: player.buildings[6].name,
+        revenue: showNum(player.buildings[6].revenue, {suffix: player.buildings[6-player.numBuildingTypes].name}),
+        cost: showNum(player.buildings[6].cost, {prefix: "$"}),
         owned: showNum(player.buildings[6].owned),
         manual: showNum(player.buildings[6].manual)
     });
 
     var building7 = buildingInfoTemplate({
-        name: "Edsger Dijkstra",
-        revenue: showNum(player.buildings[7].revenue, {suffix: "Software Engineer"}),
+        name: player.buildings[7].name,
+        revenue: showNum(player.buildings[7].revenue, {suffix: player.buildings[7-player.numBuildingTypes].name}),
         cost: showNum(player.buildings[7].cost, {prefix: "$"}),
         owned: showNum(player.buildings[7].owned),
         manual: showNum(player.buildings[7].manual)
     });
 
+    var building8 = buildingInfoTemplate({
+        name: player.buildings[8].name,
+        revenue: showNum(player.buildings[8].revenue, {suffix: "data"}),
+        cost: showNum(player.buildings[8].cost, {suffix: player.buildings[8-player.numBuildingTypes].name}),
+        owned: showNum(player.buildings[8].owned),
+        manual: showNum(player.buildings[8].manual)
+    });
+
+    var building9 = buildingInfoTemplate({
+        name: player.buildings[9].name,
+        revenue: showNum(player.buildings[9].revenue, {suffix: player.buildings[9-player.numBuildingTypes].name}),
+        cost: showNum(player.buildings[9].cost, {suffix: "data"}),
+        owned: showNum(player.buildings[9].owned),
+        manual: showNum(player.buildings[9].manual)
+    });
+
+    var building10 = buildingInfoTemplate({
+        name: player.buildings[10].name,
+        revenue: showNum(player.buildings[10].revenue, {suffix: player.buildings[10-player.numBuildingTypes].name}),
+        cost: showNum(player.buildings[10].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[10].owned),
+        manual: showNum(player.buildings[10].manual)
+    });
+
+    var building11 = buildingInfoTemplate({
+        name: player.buildings[11].name,
+        revenue: showNum(player.buildings[11].revenue, {suffix: player.buildings[11-player.numBuildingTypes].name}),
+        cost: showNum(player.buildings[11].cost, {prefix: "$"}),
+        owned: showNum(player.buildings[11].owned),
+        manual: showNum(player.buildings[11].manual)
+    });
+
     $("#class1").html(building0);
     $("#lang1").html(building1);
     $("#hardware1").html(building2);
-    $("#people1").html(building3);
-    $("#class2").html(building4);
-    $("#lang2").html(building5);
-    $("#hardware2").html(building6);
-    $("#people2").html(building7);
+    $("#data1").html(building3);
+    $("#career1").html(building4);
+    $("#people1").html(building5);
+    $("#class2").html(building6);
+    $("#lang2").html(building7);
+    $("#hardware2").html(building8);
+    $("#data2").html(building9);
+    $("#career2").html(building10);
+    $("#people2").html(building11);
 
     var buttonList = jQuery.makeArray($("#tableContainer table tr .button, .buttonLit"));
     for (var i = 0; i < buttonList.length; i++) {
